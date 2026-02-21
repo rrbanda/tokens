@@ -1,0 +1,26 @@
+# Promptly configuration
+# Only the optimizer's own LLM is configured here.
+# All agent testing inputs (server URL, model, instructions, prompts)
+# come from the UI on demand.
+
+optimizer:
+  # Llama Stack server used by the AI analyzer to generate optimization suggestions
+  server_url: "https://lss-lss.apps.prod.rhoai.rh-aiservices-bu.com"
+  model: "gemini-llm/models/gemini-2.5-flash"
+
+database:
+  # SQLite for local dev; use postgresql+asyncpg://user:pass@host/db for production
+  url: "sqlite+aiosqlite:///./data/promptly.db"
+  echo: false
+
+security:
+  # true = system CA bundle, false = skip verification, or path to a CA bundle file
+  ssl_verify: true
+  # Allowed CORS origins (use ["*"] only in development)
+  cors_origins:
+    - "http://localhost:5173"
+    - "http://localhost:8080"
+  # API key for authentication (empty = no auth, dev mode)
+  api_key: ""
+  # Rate limit for expensive endpoints (slowapi format)
+  rate_limit: "10/minute"

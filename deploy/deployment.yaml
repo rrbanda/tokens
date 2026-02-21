@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promptly
+  labels:
+    app: promptly
+    app.kubernetes.io/name: promptly
+    app.kubernetes.io/component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: promptly
+  template:
+    metadata:
+      labels:
+        app: promptly
+        app.kubernetes.io/name: promptly
+    spec:
+      containers:
+        - name: promptly
+          image: quay.io/your-org/promptly:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: CONFIG_PATH
+              value: /app/config/config.yaml
+            - name: SKILLS_DIR
+              value: /app/skills
+            - name: LOG_FORMAT
+              value: json
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: promptly-db
+                  key: url
+                  optional: true
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+              readOnly: true
+            - name: data-volume
+              mountPath: /app/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 0
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: config-volume
+          configMap:
+            name: promptly-config
+        - name: data-volume
+          emptyDir: {}

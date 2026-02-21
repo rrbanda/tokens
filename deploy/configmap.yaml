@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: promptly-config
+  labels:
+    app: promptly
+    app.kubernetes.io/name: promptly
+    app.kubernetes.io/component: config
+data:
+  config.yaml: |
+    # Only the optimizer's own LLM is configured here.
+    # All agent testing inputs come from the UI.
+    optimizer:
+      server_url: "https://llama-stack-gemini.apps.example.com"
+      model: "gemini-llm/models/gemini-2.5-flash"
+
+    database:
+      url: "sqlite+aiosqlite:///./data/promptly.db"
+      echo: false
+
+    security:
+      ssl_verify: true
+      cors_origins:
+        - "https://promptly.apps.example.com"
+      api_key: ""
+      rate_limit: "10/minute"

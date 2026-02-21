@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# Database
+data/
+*.db
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Node
+node_modules/
+
+# Frontend build
+frontend/dist/
+
+# Test / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+
+# goose-repo (external project, not part of Promptly)
+goose-repo/

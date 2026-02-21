@@ -1,0 +1,20 @@
+# OpenShift Route -- exposes the service externally
+# For vanilla Kubernetes, use an Ingress resource instead
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: promptly
+  labels:
+    app: promptly
+    app.kubernetes.io/name: promptly
+spec:
+  to:
+    kind: Service
+    name: promptly
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
